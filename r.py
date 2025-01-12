@@ -1,6 +1,7 @@
 import sys
 import subprocess
 import os
+import platform
 
 def add_gpp_to_path():
     gpp_path = r"C:\\msys64\\ucrt64\\bin"
@@ -35,8 +36,18 @@ def compile_and_run_cpp(file_name):
         print("Execution failed.")
 
 if __name__ == "__main__":
+    if not os.path.exists(".clangd"):
+        content = """CompileFlags:
+    Add:
+        - "-std=c++23"
+    """
+        with open(".clangd",'w') as file:
+            file.write(content)
     add_gpp_to_path()
-    subprocess.run("cls", shell=True)
+    if platform.system() == "Windows":
+        subprocess.run("cls", shell=True)
+    else:
+        subprocess.run("clear", shell=True)
     if len(sys.argv) < 2:
         cpp_files = [f for f in os.listdir('.') if f.endswith('.cpp')]
 
