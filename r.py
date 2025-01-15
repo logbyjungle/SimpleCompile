@@ -35,6 +35,22 @@ def compile_and_run_cpp(file_name):
     except subprocess.CalledProcessError:
         print("Execution failed.")
 
+def addtogitignore(text):
+    if os.path.exists(".gitignore"):
+        with open(".gitignore", "r") as file:
+            lines = file.read().splitlines()
+        do = True
+        for l in lines:
+            if text in l:
+                do = False
+        if do:
+            with open(".gitignore", "a") as file:
+                file.write(text + "\n")
+        
+    else:
+        with open(".gitignore","w") as file:
+            file.write(text + "\n")
+
 if __name__ == "__main__":
     if not os.path.exists(".clangd"):
         content = """CompileFlags:
@@ -43,6 +59,9 @@ if __name__ == "__main__":
     """
         with open(".clangd",'w') as file:
             file.write(content)
+    addtogitignore(".clangd")
+    addtogitignore("output.exe")
+    addtogitignore("r.py")
     add_gpp_to_path()
     if platform.system() == "Windows":
         subprocess.run("cls", shell=True)
